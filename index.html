@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> Demo</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: #fff;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.button-container {
+			margin-top: 20px;
+		}
+
+		.button-container button {
+			margin-right: 10px;
+		}
+
+		.message {
+			margin-top: 20px;
+		}
+
+		.red-text {
+			color: red;
+		}
+
+		.active {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+<div id="app" class="container">
+	<!-- •Text Interpolation
+    if message is a property in your Vue component's data, it will be rendered in the paragraph element. -->
+	<div>
+		<h2>1. Template Syntax</h2>
+		<p>{{ message }}</p>
+		<div v-html="rawHTML">
+			<!-- •Raw HTML [v-html]
+             rawHtml should contain a string of HTML content that you want to render. -->
+		</div>
+		<!--•Attribute Bindings [v-bind:id]
+url is a property in your Vue component, and it binds the href attribute of the anchor element to the value of url.  -->
+		<button :id="buttonId">Click on me</button>
+		<p>{{ 2 + 2 }}</p>
+		<!-- •JavaScript expressions inside syntax i.e.{{ }}
+the expression calculates the total based on the values of quantity and price from your Vue component's data. -->
+
+		<div class="button-container">
+			<h2>2. Methods</h2>
+			<button @click="sayHello">say hello</button>
+		</div>
+		<div>
+			<!-- [ref()
+ref() is used to create a reactive reference to a value. It's commonly used to wrap primitive values and objects that need to be tracked for changes. -->
+			<h2>3. Reactivity Fundamentals</h2>
+			<p>{{ count }}</p>
+			<p>{{ message }}</p>
+		</div>
+
+		<div class="message">
+			<h2>4. Computed Properties</h2>
+			<p>{{ computedValue }}</p>
+		</div>
+
+		<div class="message">
+			<h2>5. Class and Style Bindings</h2>
+			<!-- •Binding HTML class [v-bind:class]
+Vue.js allows you to dynamically bind CSS classes to HTML elements using the v-bind:class directive (or its shorthand :class). You can bind classes conditionally based on data properties or computed values.  -->
+			<div :class="{ active: isActive }">Dynamic Class Binding</div>
+			<!--Binding Inline Styles [v-bind:style] you can bind inline styles to HTML elements using the v-bind:style directive (or its shorthand :style). You can bind styles as objects or arrays.   -->
+			<div :style="{ color: textColor }">Dynamic Style Binding</div>
+		</div>
+		<div>
+			<h2>6. List Rendering</h2>
+			<ul>
+				<!-- •
+•v-for with an Object,You can use v-for to iterate through the key-value pairs of an object. The syntax is (value, key, index) in object
+•
+• v-for with a Range ,You can use v-for to iterate over a range of numbers using an array created with Array.from or a computed property.
+•
+•v-for on <template> ,you might want to use v-for on a <template> element to conditionally render multiple elements based on a list. -->
+				<li v-for="(item, index) in items" :key="index">{{ item }}</li>
+				<li v-for="n in 5" :key="n">{{ n }}</li>
+				<!-- •v-for with v-if ,You can combine v-for with v-if to conditionally render items in a list.
+•
+v-for with a Component,For instance, if you have a TodoItem component, you can use v-for to render a list of todo items -->
+				<template v-for="(item, index) in items">
+					<li :key="index">{{ item }}</li>
+					<li v-if="index % 2 === 0">even number</li>
+				</template>
+				<!-- •Computed Properties .Computed properties are functions in Vue.js that are used to calculate and cache values based on reactive dependencies. They are useful for performing complex calculations or data transformations. -->
+				<custom-component v-for="item in items" :key="item.id" :data="item"></custom-component>
+			</ul>
+		</div>
+
+		<div class="button-container">
+			<h2>7. Event Handling</h2>
+			<!-- •
+•Inline Handlers,Inline event handlers allow you to execute JavaScript directly within the template when a specific event occurs. You can use the v-on directive to bind an event listener to an element's event, such as a click event,Inline handlers are useful for simple event handling logic directly within the template. -->
+			<button @click="inlineHandler">Inline handler</button>
+			<!-- •Method Handlers,Method handlers involve defining event-handling methods in your component's methods section and then referencing these methods in your template.Method handlers are useful when your event handling logic is more complex or when you want to reuse the same logic in multiple places in your component or across different components. -->
+			<button @click="methodHandler">Method handler</button>
+		</div>
+		<div class="message">
+			<h2>8. Form Input Bindings</h2>
+			<!-- •
+•a. v-model with <input type=“text">,This binds the value of the input field to the message data property. Any changes in the input field will automatically update the message property and vice versa. -->
+			<input type="text" v-model="textInput" placeholder="Input"/>
+			<!-- •<input type="checkbox">, This binds the isChecked data property to the checkbox's checked state. It toggles the isChecked property when the checkbox is checked or unchecked. -->
+			<input type="checkbox" v-model="isChecked"/>
+			<!-- •<input type="radio">, Use v-model with radio buttons by binding the same data property (selectedValue in this case) to multiple radio inputs with different values. The data property will be updated with the value of the selected radio button. -->
+			<input type="radio" v-model="selectedRadio" value="option1"/>
+			<!-- •<select>v-model can be used with a <select> element to bind the selected option's value to the selectedOption data property. -->
+			<select v-model="selectedOption">
+				<option value="option1">Option 11</option>
+				<option value="option2">Option 22</option>
+			</select>
+			<!-- •<textarea>Similar to the text input, this binds the value of the <textarea> element to the message data property. -->
+			<textarea v-model="textareaInput" placeholder="Text Field"></textarea>
+		</div>
+		<div class="message">
+			<h2>9. Watchers</h2>
+			<!-- •b. v-model modifiers
+•lazy The .lazy modifier updates the data property (message) only after the input field loses focus. This is useful for reducing the number of updates during typing.
+•number,The .number modifier converts the input value to a JavaScript number type. This is useful when dealing with numeric input fields. -->
+			<input type="text" v-model.lazy="valueToWatch">
+			<!-- •
+•Watchers ,You can define watchers within the watch option of a Vue component. This option takes an object where each property represents the data property you want to watch, and the value is a function that specifies what to do when the watched property changes
+•Components  -->
+		</div>
+		<div>
+			<h2>10. Components</h2>
+			<!-- •a. Props ,props (short for "properties") are a way to pass data from a parent component to a child component. They allow you to make your child components dynamic and reusable by accepting external data.
+
+•b. Events [$emit] ,Events are a way for child components to communicate with parent components. Child components can emit events, and parent components can listen for and respond to those events.
+
+•c. Slots ,Slots are a mechanism for passing content from a parent component into a child component. They provide flexibility for composing complex UIs while keeping components reusable.
+-->
+			<custom-component :prop1="componentProp" @custom-event="handleCustomEvent">
+				<template #slotName>
+
+				</template>
+			</custom-component>
+		</div>
+
+		<!-- 11. Router -->
+		<div class="message">
+			<h2>11. Router</h2>
+			<div style="display: flex;">
+				<router-link to="/">Home</router-link>
+				|||
+				<router-link to="/about">about</router-link>
+				|||
+				<router-link to="/table">table</router-link>
+			</div>
+			<router-view></router-view>
+		</div>
+	</div>
+
+	<!-- Vue 3 script -->
+	<script src="https://cdn.jsdelivr.net/npm/vue@3.2.19/dist/vue.global.prod.js"></script>
+	<script src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"></script>
+	<!-- <script src="./js/app.js"></script> -->
+	<script>
+		const {createApp, ref, defineProps, defineComponent} = Vue
+
+		const app = createApp({
+			setup() {
+				// data
+				const message = ref('hello，Vue 3！');
+				const rawHTML = ref('<span class="red-text">Red text</span>');
+				const buttonId = ref('my-button');
+				const count = ref(0);
+				const isActive = ref(true);
+				const textColor = ref('blue');
+				const items = ref(['project1', 'project2', 'project3']);
+				const textInput = ref('');
+				const isChecked = ref(false);
+				const selectedRadio = ref('option1');
+				const selectedOption = ref('option1');
+				const textareaInput = ref('');
+				const componentProp = ref('Component Property Values');
+				const valueToWatch = ref('');
+
+				// methods
+				function sayHello() {
+					alert('hello！');
+				}
+
+				function inlineHandler() {
+					alert('Inline handler clicked');
+				}
+
+				function methodHandler() {
+					alert('Method handler clicked');
+				}
+
+				function handleCustomEvent(data) {
+					alert(`Received custom event with data：${data}`);
+				}
+
+				function computedValue() {
+					return this.count * 2;
+				}
+
+				return {
+					message,
+					rawHTML,
+					buttonId,
+					count,
+					isActive,
+					textColor,
+					items,
+					textInput,
+					isChecked,
+					selectedRadio,
+					selectedOption,
+					textareaInput,
+					componentProp,
+					valueToWatch,
+					sayHello,
+					inlineHandler,
+					methodHandler,
+					handleCustomEvent
+				};
+			},
+		});
+		app.component('custom-component', {
+			props: {
+				prop1: String,
+			},
+			emits: ['custom-event'],
+			template: `
+				<div>
+					<p>Custom Components</p>
+					<slot></slot>
+					<button @click="$emit('custom-event', 'Custom Event Data')">Trigger Custom Event</button>
+				</div>
+			`,
+		});
+		app.mount('#app');
+	</script>
+</body>
+</html>
